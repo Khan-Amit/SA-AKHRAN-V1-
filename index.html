@@ -18,7 +18,6 @@
             overflow-x: hidden;
         }
 
-        /* Sliding container */
         .page-container {
             display: flex;
             width: 200%;
@@ -35,7 +34,6 @@
             align-items: center;
         }
 
-        /* Page 1 – Landing */
         .landing {
             background-color: #0a3d2b;
             text-align: center;
@@ -76,7 +74,6 @@
             transform: translateY(2px);
         }
 
-        /* Page 2 – Control Panel */
         .control {
             background-color: #0f4d36;
         }
@@ -163,7 +160,6 @@
             text-align: center;
         }
 
-        /* Mobile adjustments */
         @media (max-width: 600px) {
             h1 { font-size: 1.8rem; }
             .ctrl-btn { font-size: 1.2rem; padding: 12px 20px; min-width: 120px; }
@@ -174,7 +170,6 @@
 </head>
 <body>
 <div class="page-container" id="pageContainer">
-    <!-- PAGE 1: LANDING / BRANDING -->
     <div class="page landing">
         <div class="guard-icon">🛡️⚡</div>
         <h1>SA‑AKHRAN</h1>
@@ -183,7 +178,6 @@
         <button class="slide-btn" id="openControlBtn">→ ENTER GUARD</button>
     </div>
 
-    <!-- PAGE 2: CONTROL PANEL -->
     <div class="page control">
         <h2>⚡ Control Panel</h2>
         <div class="button-group">
@@ -202,13 +196,11 @@
 <script>
     // Slide navigation
     const container = document.getElementById('pageContainer');
-    const openBtn = document.getElementById('openControlBtn');
-
-    openBtn.addEventListener('click', () => {
+    document.getElementById('openControlBtn').addEventListener('click', () => {
         container.style.transform = 'translateX(-50%)';
     });
 
-    // Simulation state (replace with real backend later)
+    // Simulation state
     let isRunning = false;
     let interval = null;
     let totalBytes = 0;
@@ -224,7 +216,6 @@
         if (!isRunning) return;
         const incoming = Math.floor(Math.random() * 1000) + 100;
         totalBytes += incoming;
-        // Simulate 97% rejection rate
         const reject = Math.random() < 0.97;
         if (reject) rejectedBytes += incoming;
     }
@@ -279,7 +270,14 @@
     stopBtn.addEventListener('click', stopFilter);
     downloadBtn.addEventListener('click', downloadReport);
 
-    // PWA Install prompt
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/SA-AKHRAN-V1-/sw.js')
+            .then(reg => console.log('✅ Service Worker registered'))
+            .catch(err => console.log('❌ Service Worker failed:', err));
+    }
+
+    // PWA Install Button (appears after user clicks ENTER GUARD)
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -301,11 +299,10 @@
         
         installBtn.onclick = () => {
             deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                }
+            deferredPrompt.userChoice.then((choice) => {
+                if (choice.outcome === 'accepted') console.log('User installed the app');
                 deferredPrompt = null;
+                installBtn.style.display = 'none';
             });
         };
         
