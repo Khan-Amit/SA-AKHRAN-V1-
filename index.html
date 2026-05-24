@@ -2,25 +2,281 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>SA-AKHRAN – Sluice Activated Guard</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a3d2b;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        /* Sliding container */
+        .page-container {
+            display: flex;
+            width: 200%;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .page {
+            width: 50%;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Page 1 – Landing */
+        .landing {
+            background-color: #0a3d2b;
+            text-align: center;
+        }
+
+        .guard-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            color: #d4e6d8;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        .sub {
+            color: #a3c4b0;
+            margin-bottom: 2rem;
+        }
+
+        .slide-btn {
+            background-color: #2e7d64;
+            border: none;
+            border-radius: 60px;
+            color: #e0f2e9;
+            font-size: 1.4rem;
+            font-weight: bold;
+            padding: 14px 28px;
+            margin-top: 2rem;
+            cursor: pointer;
+            font-family: monospace;
+            transition: 0.2s;
+            box-shadow: 0 4px 0 #1a4d3e;
+        }
+
+        .slide-btn:active {
+            transform: translateY(2px);
+        }
+
+        /* Page 2 – Control Panel */
+        .control {
+            background-color: #0f4d36;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            border: none;
+            border-radius: 60px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 16px 32px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: 0.2s;
+            min-width: 150px;
+        }
+
+        .start {
+            background-color: #2e7d64;
+            color: #e0f2e9;
+            box-shadow: 0 4px 0 #1a4d3e;
+        }
+
+        .start:active {
+            transform: translateY(2px);
+        }
+
+        .stop {
+            background-color: #c2410c;
+            color: #fff0e6;
+            box-shadow: 0 4px 0 #7a2e0c;
+        }
+
+        .stop:active {
+            transform: translateY(2px);
+        }
+
+        .report-box {
+            background-color: #073120;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        .report-box h3 {
+            color: #d4e6d8;
+            margin-bottom: 12px;
+        }
+
+        .report-content {
+            color: #cde2d8;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .download-btn {
+            background-color: #1f6e58;
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            margin-top: 16px;
+            cursor: pointer;
+            font-family: monospace;
+            width: auto;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #78a88e;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .ctrl-btn { font-size: 1.2rem; padding: 12px 20px; min-width: 120px; }
+            .slide-btn { font-size: 1.2rem; padding: 10px 20px; }
+            .button-group { gap: 15px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="well">
-        <h1>⚡ SA‑AKHRAN</h1>
+<div class="page-container" id="pageContainer">
+    <!-- PAGE 1: LANDING / BRANDING -->
+    <div class="page landing">
+        <div class="guard-icon">🛡️⚡</div>
+        <h1>SA‑AKHRAN</h1>
         <p class="sub">Sluice Activated – Guard</p>
-        <div class="buttons">
-            <button id="startBtn" class="start">START</button>
-            <button id="stopBtn" class="stop">STOP</button>
-        </div>
-        <div id="report" class="report hidden">
-            <h2>Report</h2>
-            <p id="reportContent"></p>
-            <button id="downloadBtn">Download Report</button>
-        </div>
-        <p class="footer">Village well clean. No noise. Just guard.</p>
+        <p>Village well clean. No noise. Just guard.</p>
+        <button class="slide-btn" id="openControlBtn">→ ENTER GUARD</button>
     </div>
-    <script src="app.js"></script>
+
+    <!-- PAGE 2: CONTROL PANEL -->
+    <div class="page control">
+        <h2>⚡ Control Panel</h2>
+        <div class="button-group">
+            <button id="startBtn" class="ctrl-btn start">START</button>
+            <button id="stopBtn" class="ctrl-btn stop">STOP</button>
+        </div>
+        <div id="reportPanel" class="report-box" style="display: none;">
+            <h3>📋 Report</h3>
+            <div id="reportText" class="report-content"></div>
+            <button id="downloadReportBtn" class="download-btn">⬇️ Download Report</button>
+        </div>
+        <div class="footer">Guard stands. Well is clean.</div>
+    </div>
+</div>
+
+<script>
+    // Slide navigation
+    const container = document.getElementById('pageContainer');
+    const openBtn = document.getElementById('openControlBtn');
+
+    openBtn.addEventListener('click', () => {
+        container.style.transform = 'translateX(-50%)';
+    });
+
+    // Simulation state (replace with real backend later)
+    let isRunning = false;
+    let interval = null;
+    let totalBytes = 0;
+    let rejectedBytes = 0;
+
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const reportPanel = document.getElementById('reportPanel');
+    const reportText = document.getElementById('reportText');
+    const downloadBtn = document.getElementById('downloadReportBtn');
+
+    function updateSimulation() {
+        if (!isRunning) return;
+        const incoming = Math.floor(Math.random() * 1000) + 100;
+        totalBytes += incoming;
+        // Simulate 92% rejection rate (typical for sluice gate)
+        const reject = Math.random() < 0.92;
+        if (reject) rejectedBytes += incoming;
+    }
+
+    function startFilter() {
+        if (isRunning) return;
+        isRunning = true;
+        totalBytes = 0;
+        rejectedBytes = 0;
+        reportPanel.style.display = 'none';
+        if (interval) clearInterval(interval);
+        interval = setInterval(updateSimulation, 100);
+    }
+
+    function stopFilter() {
+        if (!isRunning) return;
+        isRunning = false;
+        if (interval) clearInterval(interval);
+        interval = null;
+
+        const acceptedBytes = totalBytes - rejectedBytes;
+        const rejectionRate = totalBytes === 0 ? 0 : (rejectedBytes / totalBytes) * 100;
+        const energySaved = (totalBytes * 0.0001).toFixed(4);
+
+        reportText.innerHTML = `
+            <strong>Total data:</strong> ${totalBytes} bytes<br>
+            <strong>Rejected:</strong> ${rejectedBytes} bytes<br>
+            <strong>Accepted:</strong> ${acceptedBytes} bytes<br>
+            <strong>Rejection rate:</strong> ${rejectionRate.toFixed(2)}%<br>
+            <strong>Energy saved (est.):</strong> ${energySaved} kWh
+        `;
+        reportPanel.style.display = 'block';
+    }
+
+    function downloadReport() {
+        const acceptedBytes = totalBytes - rejectedBytes;
+        const rejectionRate = totalBytes === 0 ? 0 : (rejectedBytes / totalBytes) * 100;
+        const energySaved = (totalBytes * 0.0001).toFixed(4);
+        const text = `SA-AKHRAN Report\n\nTotal data: ${totalBytes} bytes\nRejected: ${rejectedBytes} bytes\nAccepted: ${acceptedBytes} bytes\nRejection rate: ${rejectionRate.toFixed(2)}%\nEnergy saved: ${energySaved} kWh`;
+        const blob = new Blob([text], {type: 'text/plain'});
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = 'SA_AKHRAN_report.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    startBtn.addEventListener('click', startFilter);
+    stopBtn.addEventListener('click', stopFilter);
+    downloadBtn.addEventListener('click', downloadReport);
+</script>
 </body>
 </html>
