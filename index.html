@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>SA-AKHRAN – Sluice Activated Guard</title>
+    <link rel="manifest" href="manifest.json">
     <style>
         * {
             margin: 0;
@@ -223,8 +224,8 @@
         if (!isRunning) return;
         const incoming = Math.floor(Math.random() * 1000) + 100;
         totalBytes += incoming;
-        // Simulate 92% rejection rate (typical for sluice gate)
-        const reject = Math.random() < 0.92;
+        // Simulate 97% rejection rate
+        const reject = Math.random() < 0.97;
         if (reject) rejectedBytes += incoming;
     }
 
@@ -277,6 +278,39 @@
     startBtn.addEventListener('click', startFilter);
     stopBtn.addEventListener('click', stopFilter);
     downloadBtn.addEventListener('click', downloadReport);
+
+    // PWA Install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        const installBtn = document.createElement('button');
+        installBtn.textContent = '📲 Install App';
+        installBtn.style.position = 'fixed';
+        installBtn.style.bottom = '20px';
+        installBtn.style.right = '20px';
+        installBtn.style.backgroundColor = '#2e7d64';
+        installBtn.style.color = 'white';
+        installBtn.style.border = 'none';
+        installBtn.style.borderRadius = '40px';
+        installBtn.style.padding = '12px 24px';
+        installBtn.style.fontFamily = 'monospace';
+        installBtn.style.zIndex = '1000';
+        installBtn.style.cursor = 'pointer';
+        
+        installBtn.onclick = () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+            });
+        };
+        
+        document.body.appendChild(installBtn);
+    });
 </script>
 </body>
 </html>
