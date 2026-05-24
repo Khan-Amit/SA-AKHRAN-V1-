@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install SA-AKHRAN</title>
+    <style>
+        body {
+            background: #0a3d2b;
+            color: #e0f2e9;
+            font-family: monospace;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #0f4d36;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: left;
+        }
+        code {
+            background: #073120;
+            padding: 4px 8px;
+            border-radius: 8px;
+            display: block;
+            white-space: pre-wrap;
+            margin: 15px 0;
+            color: #d4e6d8;
+        }
+        button {
+            background: #2e7d64;
+            border: none;
+            border-radius: 40px;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: monospace;
+            margin-top: 20px;
+        }
+        h1 { color: #d4e6d8; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🛡️ Install SA-AKHRAN</h1>
+    <p>Copy and paste the following commands into your terminal (Linux / macOS / Termux).</p>
+
+    <h2>1. Clone the repository</h2>
+    <code>git clone https://github.com/khan-amit/SA-AKHRAN-V1-.git
+cd SA-AKHRAN-V1-</code>
+
+    <h2>2. Compile the backend filters</h2>
+    <code>cd backend
+make
+cd ..</code>
+
+    <h2>3. Run the full pipeline (test)</h2>
+    <code>cat sample_data.txt | ./backend/sluice1 | ./backend/sluice2 | ./backend/sluice3 > filtered.txt</code>
+
+    <h2>4. Open the dashboard</h2>
+    <code>open frontend/index.html</code>
+
+    <p>For VoIP filtering, edit <code>voip/blacklist.txt</code> and <code>voip/whitelist.txt</code>, then run:</p>
+    <code>cd voip
+python voip_filter.py +1234567890</code>
+
+    <button onclick="window.location.href='index.html'">← Back to Dashboard</button>
+</div>
+</body>
+</html>
