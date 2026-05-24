@@ -1,4 +1,4 @@
-// filter_rules.h – Common pattern matching rules for all three tiers
+// filter_rules.h – Shared pattern matching rules for all three tiers
 
 #ifndef FILTER_RULES_H
 #define FILTER_RULES_H
